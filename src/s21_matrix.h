@@ -27,15 +27,23 @@ typedef struct matrix_struct {
   int columns;
 } matrix_t;
 
+// работа с матрицами (создание /чистка)
 int s21_create_matrix(int rows, int columns, matrix_t *result);
 void s21_remove_matrix(matrix_t *A);
+
+// // арифметика
 // int s21_eq_matrix(matrix_t *A, matrix_t *B);
 // int s21_sum_matrix(matrix_t *A, matrix_t *B, matrix_t *result);
 // int s21_sub_matrix(matrix_t *A, matrix_t *B, matrix_t *result);
-// int s21_mult_number(matrix_t *A, double number, matrix_t *result);
+int s21_mult_number(matrix_t *A, double number, matrix_t *result);
 // int s21_mult_matrix(matrix_t *A, matrix_t *B, matrix_t *result);
+
+// // доп свойства матриц
 // int s21_transpose(matrix_t *A, matrix_t *result);
 // int s21_calc_complements(matrix_t *A, matrix_t *result);
 // int s21_determinant(matrix_t *A, double *result);
+
+// доп функции
+int examination_matrix(matrix_t *A);
 
 #endif  // S21_MATRIX_H_

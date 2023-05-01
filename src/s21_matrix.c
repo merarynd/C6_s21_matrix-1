@@ -27,9 +27,10 @@
 
 int s21_create_matrix(int rows, int columns,
                       matrix_t *result) {  // создание матриц
-  int ret = INCORRECT_MATRIX;  // изначально даем значение ошибки ввода данных
-                               // для декомпозиции кода и корректности ввода
-                               // данных дабы не делать дополнительных проверок
+  int error =
+      INCORRECT_MATRIX;  // изначально даем значение ошибки ввода данных
+                         // для декомпозиции кода и корректности ввода
+                         // данных дабы не делать дополнительных проверок
   if (rows > 0 && columns > 0) {  // проверка поданных данных
     double **matrix =
         calloc(rows * columns * sizeof(double) + rows * sizeof(double *), 1);
@@ -41,10 +42,10 @@ int s21_create_matrix(int rows, int columns,
       result->columns = columns;
       result->matrix = matrix;
       result->rows = rows;
-      ret = OK;
+      error = OK;
     }
   }
-  return ret;
+  return error;
 }
 
 void s21_remove_matrix(matrix_t *A) {  // очистка матрици
@@ -70,3 +71,28 @@ void s21_remove_matrix(matrix_t *A) {  // очистка матрици
 //   }
 //   return outcome;
 // }
+
+int examination_matrix(matrix_t *A) {  // проверка матрици
+  int exam = OK;
+  if (A->matrix == NULL || A->matrix == NULL || A->rows <= 0 || A->columns <= 0)
+    exam = INCORRECT_MATRIX;  // соответсвенно всех ее компанентов
+  return exam;
+}
+
+int s21_mult_number(matrix_t *A, double number, matrix_t *result) {
+  int res = OK;
+  if (examination_matrix(A) == OK) {  // проверка матрици
+    res = s21_create_matrix(A->rows, A->columns, result);  // создание матрици
+    if (res == OK) {  // проверяем выход при создании матрици
+      for (int i = 0; i < A->rows; i++) {       // проходимся по
+        for (int j = 0; j < A->columns; j++) {  // всей матрице
+          result->matrix[i][j] =
+              A->matrix[i][j] * number;  // умножение на число
+        }
+      }
+    } else {
+      res = INCORRECT_MATRIX;  // если результат при создании  матрици
+    }                          // некорректный
+  }
+  return res;
+}

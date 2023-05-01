@@ -1166,7 +1166,7 @@ int main() {
   // tcase_add_test(tc_1, test_s21_determinant_2);
   // tcase_add_test(tc_1, test_s21_determinant_3);
   // tcase_add_test(tc_1, test_s21_determinant_5);
-  // tcase_add_test(tc_1, test_s21_calc_complements);
+  // tcase_add_test(tc_1, test_s21_calc_complements);s
   // tcase_add_test(tc_1, test_s21_calc_complements_2);
   // tcase_add_test(tc_1, test_s21_calc_complements_3);
   // tcase_add_test(tc_1, test_s21_inverse_matrix);
