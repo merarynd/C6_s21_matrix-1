@@ -1,113 +1,61 @@
-OS :=$(shell uname -s)
-NAME :=$(shell whoami)
-GC=gcc
-CFLAGS=-std=c11 -Wall -Wextra -Werror -g
-TEST=../tests/test
-TEST_NOT=../tests/testest
-LIB=s21_decimal
-SPEC=special
-COM=common
-GCOV=--coverage
-SANI=-fsanitize=address -g
-#  цвета
-BLUE=\033[96m
-RED=\033[91m
-END=\033[0m
+CC+FLAGS = gcc -std=c11 -Wall -Wextra -Werror
+GCOV_FLAGS = -L. --coverage -ls21_matrix
 
-ifeq ($(OS), Darwin)
-	FLAGS_PLATFORM =-lcheck
+OS = $(shell uname)
+
+ifeq ($(OS), Linux)
+	CHECK_FLAGS = -lcheck -lm -pthread -lrt -lsubunit
+	OPEN_CMD = xdg-open
+	MEM_CHECK = valgrind --tool=memcheck --trace-children=yes --track-origins=yes --leak-check=full
 else
-	FLAGS_PLATFORM =-lcheck -lsubunit -lrt -lm -lpthread -g
+	CHECK_FLAGS = -lcheck
+	OPEN_CMD = open
+	MEM_CHECK = leaks --atExit -- ./s21_test
 endif
 
-all : out
+all: clean test gcov_report
 
-clean :
-	@echo "$(BLUE)-------------CLEAN-------------$(END)"
-	@rm -rf *.o
-	@rm -rf *.a
-	@rm -rf *.g*
-	@rm -rf report
-	@rm -rf test.info
-	@rm -rf gcov
-	@rm -rf f
-	@rm -rf tests
-	@rm -rf ../tests/*.o
+test: s21_matrix.a
+	$(CC+FLAGS) s21_tests.c s21_matrix.a $(CHECK_FLAGS) -L. -ls21_matrix -o s21_test
+	./s21_test
 
-test_not : clean $(LIB).a $(TEST).o
-	@echo "$(BLUE)---------RUNNING TESTS---------$(END)"
-	@$(GC) $(CFLAGS) $(TEST).o -l check -L. $(LIB).a $(FLAGS_PLATFORM) -o tests
-	@./tests > 2.txt
-	@echo "$(BLUE)-------------------------------$(END)"
+gcov_report: s21_matrix.a
+	$(CC+FLAGS) *.c s21_matrix.a $(CHECK_FLAGS) $(GCOV_FLAGS) -o s21_test
+	./s21_test
+	lcov -t s21_test -o s21_test.info -c -d .
+	genhtml -o report s21_test.info
+	$(OPEN_CMD) ./report/index.html
+	make clean_test
 
-test : clean $(LIB).a $(TEST_NOT).o
-	@echo "$(BLUE)---------RUNNING TESTS---------$(END)"
-	@$(GC) $(CFLAGS) $(TEST_NOT).o -l check -L. $(LIB).a $(FLAGS_PLATFORM) -o tests
-	@./tests > 2.txt
-	@echo "$(BLUE)-------------------------------$(END)"
+s21_matrix.a: s21_matrix.o
+	ar rcs libs21_matrix.a *.o
+	rm -rf *.o
+	ranlib libs21_matrix.a
+	cp libs21_matrix.a s21_matrix.a
+	cp libs21_matrix.a ls21_matrix.a
 
-# test: s21_decimal.a
-# 	$(GC) s21_decimal.a test_hettiehe/*.c $(FLAGS_PLATFORM) -o s21_test -L. -ls21_decimal
-# 	./s21_test
+s21_matrix.o:
+	$(CC+FLAGS) -c s21_matrix.c
 
-$(TEST).o : $(TEST).c
-	@$(GC) $(CFLAGS) -c $(TEST).c -o $(TEST).o
+check:
+	make test
+	CK_FORK=no $(MEM_CHECK) ./s21_test
+	make clean
 
-$(TEST_NOT).o : $(TEST_NOT).c
-	@$(GC) $(CFLAGS) -c $(TEST_NOT).c -o $(TEST_NOT).o
+clang:
+	cp ../materials/linters/.clang-format ../src/.clang-format
+	clang-format -style=Google -n *.c *.h
+	rm .clang-format
 
+clean_obj:
+	rm -rf *.o *.a
 
-# библиотека для теста
-$(LIB).a : $(LIB).c $(COM).c # $(SPEC).c
-	@echo "$(BLUE)------------LIBRARY------------$(END)"
-	@$(GC) -g -c $(LIB).c $(COM).c $(SPEC).c
-	@ar rc $(LIB).a $(LIB).o $(COM).o $(SPEC).o
-	@ranlib $(LIB).a
+clean_test: clean_obj
+	rm -rf *.gcda
+	rm -rf *.gcno
+	rm -rf *.info
+	rm -rf s21_test
 
-#gcov
-gcov_report : clean lcov $(TEST).o g$(LIB).a
-	@echo "$(BLUE)----------GCOV REPORT----------$(END)"
-	@$(GC) $(GCOV) $(TEST).o -l check -L. $(LIB).a -o gcov
-	@./gcov
-	@gcov $(LIB).c
-	@~/goinfre/homebrew/bin/lcov -t "test" -o test.info -c -d .
-	@~/goinfre/homebrew/bin/genhtml -o report test.info
-	@open report/index.html
-	@echo "$(BLUE)-------------------------------$(END)"
-
-# библиотека для отчета
-g$(LIB).a : $(LIB).c $(COM).c # $(SPEC).c
-	@echo "$(BLUE)----------COMPILATION----------$(END)"
-	@$(GC) $(GCOV) -c $(LIB).c 
-	@$(GC) $(GCOV) -c $(COM).c 
-	@$(GC) $(GCOV) -c $(SPEC).c
-	@ar rc $(LIB).a $(LIB).o $(COM).o $(SPEC).o
-	@ranlib $(LIB).a
-
-# проверки lcov и brew
-lcov:
-ifeq ("", "$(wildcard ~/goinfre/homebrew/bin/lcov)")
-	$(error Need to install lcov: make lcov_install)
-endif
-
-lcov_install :  brew
-	@brew install lcov
-
-brew:
-ifeq ("", "$(wildcard ~/goinfre/homebrew)")
-	@git clone https://github.com/Homebrew/brew ~/goinfre/homebrew
-	@echo "$(RED)Выполните eval \"\$$(/opt/goinfre/*/homebrew/bin/brew shellenv)\"$(END)"
-#   curl -fsSL https://rawgit.com/kube/42homebrew/master/install.sh | zsh
-endif
-
-out: f
-	@echo "$(BLUE)----------COMPILATION----------$(END)"
-	@./f > 1.txt
-	@echo "$(BLUE)-------------------------------$(END)"
-
-# мой мейник
-f : clean f.o $(LIB).a 
-	@$(GC) $(CFLAGS) f.o  -L. $(LIB).a $(FLAGS_PLATFORM) -o f
-
-f.o : f.c
-	@$(GC) $(CFLAGS) -c f.c
+clean: clean_test
+	rm -rf s21_test
+	rm -rf report

@@ -6,11 +6,24 @@
 // #include <math.h>
 // #include <stdbool.h>
 // #include <stdint.h>
-// #include <stdlib.h>
+#include <stdlib.h>
 // #include <string.h>
 
 #define SUCCESS 1
 #define FAILURE 0
+
+// typedef enum {
+//   OK,
+//   // 0
+//   INCORRECT,
+//   // 1  Ошибка, некорректная матрица
+//   CALC_ERR,
+//   // 2  Ошибка вычисления (несовпадающие размеры матриц; матрица, для
+//   // которой нельзя провести вычисления и т.д.)
+
+// } errors;
+
+enum { OK = 0, INCORRECT_MATRIX = 1, CALC_ERROR = 2, MALLOC_FAILED = 3 };
 
 typedef struct matrix_struct {
   double **matrix;
@@ -19,7 +32,7 @@ typedef struct matrix_struct {
 } matrix_t;
 
 int s21_create_matrix(int rows, int columns, matrix_t *result);
-// void s21_remove_matrix(matrix_t *A);
+void s21_remove_matrix(matrix_t *A);
 // int s21_eq_matrix(matrix_t *A, matrix_t *B);
 // int s21_sum_matrix(matrix_t *A, matrix_t *B, matrix_t *result);
 // int s21_sub_matrix(matrix_t *A, matrix_t *B, matrix_t *result);
