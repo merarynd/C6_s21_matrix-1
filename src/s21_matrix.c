@@ -1,54 +1,59 @@
 #include "s21_matrix.h"
 
-int s21_create_matrix(int rows, int columns, matrix_t *result) {
-  int error = 0;
-  if (rows > 0 && columns > 0) {
-    result->rows = rows;
-    result->columns = columns;
-    result->matrix = (double **)calloc(rows, sizeof(double *));
-    error = 0;
-  } else {
-    error = 1;
-  }
-  if (result->matrix != NULL) {
-    for (int i = 0; i != rows; i++) {
-      result->matrix[i] = (double *)calloc(columns, sizeof(double));
-      if (!result->matrix) {
-        for (int j = 0; j != columns; i++) free(result->matrix[j]);
-        free(result->matrix);
-      }
-    }
-    error = 0;
-  }
-  return error;
-}
-
 // int s21_create_matrix(int rows, int columns, matrix_t *result) {
-//   int ret = INCORRECT_MATRIX;
-//   if (rows > 0 && columns > 0) {
-//     double **matrix =
-//         calloc(rows * columns * sizeof(double) + rows * sizeof(double *), 1);
-//     if (matrix) {
-//       double *ptr = (double *)(matrix + rows);
-//       for (int i = 0; i < rows; i++) {
-//         matrix[i] = ptr + columns * i;
-//       }
-//       result->columns = columns;
-//       result->matrix = matrix;
-//       result->rows = rows;
-//       ret = OK;
-//     }
+//   int error = 0;
+//   if (rows > 0 && columns > 0) {  // проверка поданных данных
+//     result->rows = rows;
+//     result->columns = columns;
+//     result->matrix = (double **)calloc(rows, sizeof(double *));
+//     error = 0;
+//   } else {
+//     error = 1;
 //   }
-//   return ret;
+//   if (result->matrix != NULL) {  // проверка поданных данных
+//     for (int i = 0; i != rows; i++) {
+//       result->matrix[i] = (double *)calloc(columns, sizeof(double));
+//       if (!result->matrix) {
+//         for (int j = 0; j != columns; i++) {
+//           free(result->matrix[j]);  // очистка памяти каждого элемента
+//         }
+//         free(result->matrix);  // очистка матрици
+//       }
+//     }
+//     error = 0;
+//   }
+//   return error;
 // }
 
-void s21_remove_matrix(matrix_t *A) {
-  if (A->matrix) {
-    free(A->matrix);
+int s21_create_matrix(int rows, int columns,
+                      matrix_t *result) {  // создание матриц
+  int ret = INCORRECT_MATRIX;  // изначально даем значение ошибки ввода данных
+                               // для декомпозиции кода и корректности ввода
+                               // данных дабы не делать дополнительных проверок
+  if (rows > 0 && columns > 0) {  // проверка поданных данных
+    double **matrix =
+        calloc(rows * columns * sizeof(double) + rows * sizeof(double *), 1);
+    if (matrix) {  // защита малока (динамической памяти)
+      double *ptr = (double *)(matrix + rows);
+      for (int i = 0; i < rows; i++) {
+        matrix[i] = ptr + columns * i;
+      }
+      result->columns = columns;
+      result->matrix = matrix;
+      result->rows = rows;
+      ret = OK;
+    }
   }
-  A->matrix = NULL;
-  A->columns = 0;
-  A->rows = 0;
+  return ret;
+}
+
+void s21_remove_matrix(matrix_t *A) {  // очистка матрици
+  if (A->matrix) {
+    free(A->matrix);  // очистка динамической памяти
+  }
+  A->matrix = NULL;  // зануление
+  A->columns = 0;    // отдельных
+  A->rows = 0;       // сегментов
 }
 
 // int s21_create_matrix(int rows, int columns, matrix_t *result) {

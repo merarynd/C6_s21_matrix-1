@@ -12,18 +12,14 @@
 #define SUCCESS 1
 #define FAILURE 0
 
-// typedef enum {
-//   OK,
-//   // 0
-//   INCORRECT,
-//   // 1  Ошибка, некорректная матрица
-//   CALC_ERR,
-//   // 2  Ошибка вычисления (несовпадающие размеры матриц; матрица, для
-//   // которой нельзя провести вычисления и т.д.)
-
-// } errors;
-
-enum { OK = 0, INCORRECT_MATRIX = 1, CALC_ERROR = 2, MALLOC_FAILED = 3 };
+enum {
+  OK = 0,                // 0
+  INCORRECT_MATRIX = 1,  // 1  Ошибка, некорректная матрица
+  CALC_ERROR = 2,  // 2  Ошибка вычисления (несовпадающие размеры матриц;
+                   // матрица, для
+  // которой нельзя провести вычисления и т.д.)
+  MALLOC_FAILED = 3  // 3 Ошибка работы с динамической памятью
+};
 
 typedef struct matrix_struct {
   double **matrix;
