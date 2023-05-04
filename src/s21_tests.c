@@ -10,31 +10,31 @@
 
 #define IDENTITY_MATRIX 2
 
-// void s21_fill(matrix_t *matrixStruct, double value) {
-//   for (int i = 0; i < matrixStruct->rows; i++) {
-//     for (int j = 0; j < matrixStruct->columns; j++) {
-//       matrixStruct->matrix[i][j] = value;
-//     }
-//   }
-// }
+void s21_fill(matrix_t *matrixStruct, double value) {
+  for (int i = 0; i < matrixStruct->rows; i++) {
+    for (int j = 0; j < matrixStruct->columns; j++) {
+      matrixStruct->matrix[i][j] = value;
+    }
+  }
+}
 
-// void s21_gen_matrix(matrix_t *A) {
-//   double num = 1;
-//   for (int i = 0; i < A->rows; i++) {
-//     for (int j = 0; j < A->columns; j++, num++) {
-//       A->matrix[i][j] = num;
-//     }
-//   }
-// }
+void s21_gen_matrix(matrix_t *A) {
+  double num = 1;
+  for (int i = 0; i < A->rows; i++) {
+    for (int j = 0; j < A->columns; j++, num++) {
+      A->matrix[i][j] = num;
+    }
+  }
+}
 
-// void s21_anti_gen_matrix(matrix_t *A) {
-//   double num = 32;
-//   for (int i = 0; i < A->rows; i++) {
-//     for (int j = 0; j < A->columns; j++, num--) {
-//       A->matrix[i][j] = num;
-//     }
-//   }
-// }
+void s21_anti_gen_matrix(matrix_t *A) {
+  double num = 32;
+  for (int i = 0; i < A->rows; i++) {
+    for (int j = 0; j < A->columns; j++, num--) {
+      A->matrix[i][j] = num;
+    }
+  }
+}
 
 START_TEST(create_matrix) {
   int code = 0;
@@ -317,20 +317,20 @@ END_TEST
 // }
 // END_TEST
 
-// START_TEST(test_s21_sum_matrix_2) {
-//   matrix_t temp;
-//   matrix_t temp2;
-//   matrix_t result;
-//   s21_create_matrix(3, 3, &temp);
-//   s21_create_matrix(3, 3, &temp2);
-//   s21_gen_matrix(&temp);
-//   s21_gen_matrix(&temp2);
-//   ck_assert_int_eq(s21_sum_matrix(&temp, &temp2, &result), 0);
-//   s21_remove_matrix(&temp);
-//   s21_remove_matrix(&temp2);
-//   s21_remove_matrix(&result);
-// }
-// END_TEST
+START_TEST(test_s21_sum_matrix_2) {
+  matrix_t temp;
+  matrix_t temp2;
+  matrix_t result;
+  s21_create_matrix(3, 3, &temp);
+  s21_create_matrix(3, 3, &temp2);
+  s21_gen_matrix(&temp);
+  s21_gen_matrix(&temp2);
+  ck_assert_int_eq(s21_sum_matrix(&temp, &temp2, &result), 0);
+  s21_remove_matrix(&temp);
+  s21_remove_matrix(&temp2);
+  s21_remove_matrix(&result);
+}
+END_TEST
 
 // START_TEST(test_s21_sub_matrix) {
 //   matrix_t temp;
@@ -356,20 +356,20 @@ END_TEST
 // }
 // END_TEST
 
-// START_TEST(test_s21_sub_matrix_2) {
-//   matrix_t temp;
-//   matrix_t temp2;
-//   matrix_t result;
-//   s21_create_matrix(3, 3, &temp);
-//   s21_create_matrix(3, 3, &temp2);
-//   s21_gen_matrix(&temp);
-//   s21_gen_matrix(&temp2);
-//   ck_assert_int_eq(s21_sub_matrix(&temp, &temp2, &result), 0);
-//   s21_remove_matrix(&temp);
-//   s21_remove_matrix(&temp2);
-//   s21_remove_matrix(&result);
-// }
-// END_TEST
+START_TEST(test_s21_sub_matrix_2) {
+  matrix_t temp;
+  matrix_t temp2;
+  matrix_t result;
+  s21_create_matrix(3, 3, &temp);
+  s21_create_matrix(3, 3, &temp2);
+  s21_gen_matrix(&temp);
+  s21_gen_matrix(&temp2);
+  ck_assert_int_eq(s21_sub_matrix(&temp, &temp2, &result), 0);
+  s21_remove_matrix(&temp);
+  s21_remove_matrix(&temp2);
+  s21_remove_matrix(&result);
+}
+END_TEST
 
 // START_TEST(test_s21_mult_number) {
 //   matrix_t temp;
@@ -472,41 +472,41 @@ END_TEST
 // }
 // END_TEST
 
-// START_TEST(test_s21_mult_matrix_3) {
-//   matrix_t temp;
-//   matrix_t temp2;
-//   matrix_t result;
-//   s21_create_matrix(3, 3, &temp);
-//   s21_create_matrix(3, 3, &temp2);
-//   s21_gen_matrix(&temp);
-//   s21_gen_matrix(&temp2);
-//   ck_assert_int_eq(s21_mult_matrix(&temp, &temp2, &result), 0);
-//   s21_remove_matrix(&temp);
-//   s21_remove_matrix(&temp2);
-//   s21_remove_matrix(&result);
-// }
-// END_TEST
+START_TEST(test_s21_mult_matrix_3) {
+  matrix_t temp;
+  matrix_t temp2;
+  matrix_t result;
+  s21_create_matrix(3, 3, &temp);
+  s21_create_matrix(3, 3, &temp2);
+  s21_gen_matrix(&temp);
+  s21_gen_matrix(&temp2);
+  ck_assert_int_eq(s21_mult_matrix(&temp, &temp2, &result), 0);
+  s21_remove_matrix(&temp);
+  s21_remove_matrix(&temp2);
+  s21_remove_matrix(&result);
+}
+END_TEST
 
-// START_TEST(test_s21_transpose) {
-//   matrix_t temp;
-//   matrix_t result;
-//   matrix_t result_defolt;
-//   s21_create_matrix(3, 2, &temp);
-//   s21_create_matrix(2, 3, &result_defolt);
-//   s21_gen_matrix(&temp);
-//   result_defolt.matrix[0][0] = 1;
-//   result_defolt.matrix[0][1] = 3;
-//   result_defolt.matrix[0][2] = 5;
-//   result_defolt.matrix[1][0] = 2;
-//   result_defolt.matrix[1][1] = 4;
-//   result_defolt.matrix[1][2] = 6;
-//   ck_assert_int_eq(s21_transpose(&temp, &result), 0);
-//   ck_assert_int_eq(s21_eq_matrix(&result_defolt, &result), 1);
-//   s21_remove_matrix(&temp);
-//   s21_remove_matrix(&result);
-//   s21_remove_matrix(&result_defolt);
-// }
-// END_TEST
+START_TEST(test_s21_transpose) {
+  matrix_t temp;
+  matrix_t result;
+  matrix_t result_defolt;
+  s21_create_matrix(3, 2, &temp);
+  s21_create_matrix(2, 3, &result_defolt);
+  s21_gen_matrix(&temp);
+  result_defolt.matrix[0][0] = 1;
+  result_defolt.matrix[0][1] = 3;
+  result_defolt.matrix[0][2] = 5;
+  result_defolt.matrix[1][0] = 2;
+  result_defolt.matrix[1][1] = 4;
+  result_defolt.matrix[1][2] = 6;
+  ck_assert_int_eq(s21_transpose(&temp, &result), 0);
+  ck_assert_int_eq(s21_eq_matrix(&result_defolt, &result), 1);
+  s21_remove_matrix(&temp);
+  s21_remove_matrix(&result);
+  s21_remove_matrix(&result_defolt);
+}
+END_TEST
 
 // START_TEST(test_s21_determinant) {
 //   matrix_t temp;
@@ -732,35 +732,35 @@ END_TEST
 // }
 // END_TEST
 
-// START_TEST(s21_eq_matrix_test_3) {
-//   matrix_t result1;
-//   matrix_t result2;
-//   s21_create_matrix(32, 32, &result1);
-//   s21_create_matrix(27, 27, &result2);
-//   s21_fill(&result1, 42);
-//   s21_fill(&result2, 42);
-//   int expected_result = 0;
-//   int actual_result = s21_eq_matrix(&result1, &result2);
-//   ck_assert_uint_eq(expected_result, actual_result);
-//   s21_remove_matrix(&result1);
-//   s21_remove_matrix(&result2);
-// }
-// END_TEST
+START_TEST(s21_eq_matrix_test_3) {
+  matrix_t result1;
+  matrix_t result2;
+  s21_create_matrix(32, 32, &result1);
+  s21_create_matrix(27, 27, &result2);
+  s21_fill(&result1, 42);
+  s21_fill(&result2, 42);
+  int expected_result = 0;
+  int actual_result = s21_eq_matrix(&result1, &result2);
+  ck_assert_uint_eq(expected_result, actual_result);
+  s21_remove_matrix(&result1);
+  s21_remove_matrix(&result2);
+}
+END_TEST
 
-// START_TEST(s21_eq_matrix_test_4) {
-//   matrix_t result1;
-//   matrix_t result2;
-//   s21_create_matrix(22, 22, &result1);
-//   s21_create_matrix(22, 22, &result2);
-//   s21_fill(&result1, 13);
-//   s21_fill(&result2, 12);
-//   int expected_result = 0;
-//   int actual_result = s21_eq_matrix(&result1, &result2);
-//   ck_assert_uint_eq(expected_result, actual_result);
-//   s21_remove_matrix(&result1);
-//   s21_remove_matrix(&result2);
-// }
-// END_TEST
+START_TEST(s21_eq_matrix_test_4) {
+  matrix_t result1;
+  matrix_t result2;
+  s21_create_matrix(22, 22, &result1);
+  s21_create_matrix(22, 22, &result2);
+  s21_fill(&result1, 13);
+  s21_fill(&result2, 12);
+  int expected_result = 0;
+  int actual_result = s21_eq_matrix(&result1, &result2);
+  ck_assert_uint_eq(expected_result, actual_result);
+  s21_remove_matrix(&result1);
+  s21_remove_matrix(&result2);
+}
+END_TEST
 
 // START_TEST(s21_sum_matrix_test_1) {
 //   matrix_t result;
@@ -833,30 +833,30 @@ END_TEST
 // }
 // END_TEST
 
-// START_TEST(s21_sub_matrix_test_1) {
-//   matrix_t result;
-//   matrix_t result1;
-//   matrix_t result2;
-//   matrix_t result3;
-//   s21_create_matrix(4, 4, &result1);
-//   s21_create_matrix(4, 4, &result2);
-//   s21_fill(&result1, 4);
-//   s21_fill(&result2, 3);
-//   s21_create_matrix(4, 4, &result);
-//   s21_fill(&result, 1);
-//   int sum_m = s21_sub_matrix(&result1, &result2, &result3);
-//   for (int i = 0; i < 4; i++) {
-//     for (int j = 0; j < 4; j++) {
-//       ck_assert_double_eq(result.matrix[i][j], result3.matrix[i][j]);
-//     }
-//   }
-//   ck_assert_uint_eq(sum_m, 0);
-//   s21_remove_matrix(&result1);
-//   s21_remove_matrix(&result2);
-//   s21_remove_matrix(&result3);
-//   s21_remove_matrix(&result);
-// }
-// END_TEST
+START_TEST(s21_sub_matrix_test_1) {
+  matrix_t result;
+  matrix_t result1;
+  matrix_t result2;
+  matrix_t result3;
+  s21_create_matrix(4, 4, &result1);
+  s21_create_matrix(4, 4, &result2);
+  s21_fill(&result1, 4);
+  s21_fill(&result2, 3);
+  s21_create_matrix(4, 4, &result);
+  s21_fill(&result, 1);
+  int sum_m = s21_sub_matrix(&result1, &result2, &result3);
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 4; j++) {
+      ck_assert_double_eq(result.matrix[i][j], result3.matrix[i][j]);
+    }
+  }
+  ck_assert_uint_eq(sum_m, 0);
+  s21_remove_matrix(&result1);
+  s21_remove_matrix(&result2);
+  s21_remove_matrix(&result3);
+  s21_remove_matrix(&result);
+}
+END_TEST
 
 // START_TEST(s21_sub_matrix_test_2) {
 //   matrix_t result;
@@ -1153,15 +1153,15 @@ int main() {
   // tcase_add_test(tc_1, test_s21_eq_matrix_4);
   // tcase_add_test(tc_1, test_s21_eq_matrix_5);
   // tcase_add_test(tc_1, test_s21_sum_matrix);
-  // tcase_add_test(tc_1, test_s21_sum_matrix_2);
-  // tcase_add_test(tc_1, test_s21_sub_matrix);
-  // tcase_add_test(tc_1, test_s21_sub_matrix_2);
+  tcase_add_test(tc_1, test_s21_sum_matrix_2);
+  //  tcase_add_test(tc_1, test_s21_sub_matrix);
+  tcase_add_test(tc_1, test_s21_sub_matrix_2);
   // tcase_add_test(tc_1, test_s21_mult_number);
   // tcase_add_test(tc_1, test_s21_mult_number_2);
   // tcase_add_test(tc_1, test_s21_mult_matrix_2);
   // tcase_add_test(tc_1, test_s21_mult_matrix_4);
-  // tcase_add_test(tc_1, test_s21_mult_matrix_3);
-  // tcase_add_test(tc_1, test_s21_transpose);
+  tcase_add_test(tc_1, test_s21_mult_matrix_3);
+  tcase_add_test(tc_1, test_s21_transpose);
   // tcase_add_test(tc_1, test_s21_determinant);
   // tcase_add_test(tc_1, test_s21_determinant_2);
   // tcase_add_test(tc_1, test_s21_determinant_3);
@@ -1175,24 +1175,24 @@ int main() {
   // tcase_add_test(tc_1, test_s21_inverse_matrix_4);
   // tcase_add_test(tc_1, s21_eq_matrix_test_1);
   // tcase_add_test(tc_1, s21_eq_matrix_test_2);
-  // tcase_add_test(tc_1, s21_eq_matrix_test_3);
-  // tcase_add_test(tc_1, s21_eq_matrix_test_4);
+  tcase_add_test(tc_1, s21_eq_matrix_test_3);
+  tcase_add_test(tc_1, s21_eq_matrix_test_4);
   // tcase_add_test(tc_1, s21_sum_matrix_test_1);
   // tcase_add_test(tc_1, s21_sum_matrix_test_2);
   // tcase_add_test(tc_1, s21_sum_matrix_test_3);
-  // tcase_add_test(tc_1, s21_sub_matrix_test_1);
+  tcase_add_test(tc_1, s21_sub_matrix_test_1);
   // tcase_add_test(tc_1, s21_sub_matrix_test_2);
-  // tcase_add_test(tc_1, s21_sub_matrix_test_3);
-  // tcase_add_test(tc_1, s21_mult_number_test_1);
-  // tcase_add_test(tc_1, s21_mult_number_test_2);
-  // tcase_add_test(tc_1, s21_mult_matrix_test_1);
-  // tcase_add_test(tc_1, s21_mult_matrix_test_2);
-  // tcase_add_test(tc_1, s21_calc_complements_test_1);
-  // tcase_add_test(tc_1, s21_calc_complements_test_2);
-  // tcase_add_test(tc_1, s21_determinant_test_1);
-  // tcase_add_test(tc_1, s21_determinant_test_2);
-  // tcase_add_test(tc_1, s21_inverse_matrix_test_1);
-  // tcase_add_test(tc_1, s21_inverse_matrix_test_2);
+  //  tcase_add_test(tc_1, s21_sub_matrix_test_3);
+  //  tcase_add_test(tc_1, s21_mult_number_test_1);
+  //  tcase_add_test(tc_1, s21_mult_number_test_2);
+  //  tcase_add_test(tc_1, s21_mult_matrix_test_1);
+  //  tcase_add_test(tc_1, s21_mult_matrix_test_2);
+  //  tcase_add_test(tc_1, s21_calc_complements_test_1);
+  //  tcase_add_test(tc_1, s21_calc_complements_test_2);
+  //  tcase_add_test(tc_1, s21_determinant_test_1);
+  //  tcase_add_test(tc_1, s21_determinant_test_2);
+  //  tcase_add_test(tc_1, s21_inverse_matrix_test_1);
+  //  tcase_add_test(tc_1, s21_inverse_matrix_test_2);
   srunner_run_all(sr, CK_ENV);
   a = srunner_ntests_failed(sr);
   srunner_free(sr);
