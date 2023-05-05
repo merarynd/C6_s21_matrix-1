@@ -41,11 +41,12 @@ int s21_mult_matrix(matrix_t *A, matrix_t *B, matrix_t *result);
 
 // доп свойства матриц
 int s21_transpose(matrix_t *A, matrix_t *result);
-// int s21_calc_complements(matrix_t *A, matrix_t *result);
+int s21_calc_complements(matrix_t *A, matrix_t *result);
 // int s21_determinant(matrix_t *A, double *result);
 
 // доп функции
 int examination_matrix(matrix_t *A);
+void minor_matrix(int rows, int columns, matrix_t *A, matrix_t *result, int n);
 
 // тесты
 void s21_fill(matrix_t *matrixStruct, double value);
