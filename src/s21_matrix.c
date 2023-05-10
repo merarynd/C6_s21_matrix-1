@@ -211,12 +211,14 @@ int s21_calc_complements(matrix_t *A, matrix_t *result) {
       if (res == OK) {
         for (int i = 0; i < A->rows; i++) {       // проходимся по
           for (int j = 0; j < A->columns; j++) {  // всей матрице
-            // double minor = 0;
+            double det_m = 0;
             matrix_t nov_mat = {0};
             s21_create_matrix(A->rows - 1, A->columns - 1, &nov_mat);
             minor_matrix(i, j, A, &nov_mat, A->rows);
-            // result->matrix;
-            s21_remove_matrix(&nov_mat);
+            s21_determinant(&nov_mat, &det_m);
+            result->matrix[i][j] =  // поиск алгебрагического
+                pow(-1, (i + j)) * det_m;  //  доп. элемента матрицы
+            s21_remove_matrix(&nov_mat);  // чистка
           }
         }
       } else {
@@ -231,6 +233,7 @@ int s21_calc_complements(matrix_t *A, matrix_t *result) {
 }
 
 void minor_matrix(int rows, int columns, matrix_t *A, matrix_t *result, int n) {
+  // double res = 0;
   int n_rows = 0, n_colums = 0;
   result->rows = n - 1;  // убираем у каждого параметра
   result->columns = n - 1;  // по одному ряду/столбцу
@@ -238,34 +241,57 @@ void minor_matrix(int rows, int columns, matrix_t *A, matrix_t *result, int n) {
     if (i == rows) n_rows = 1;
     for (int j = 0; j > n; i++) {
       if (j == columns) n_colums = 1;
+      if (i != rows && j != columns) {
+        result->matrix[rows - n_rows][columns - n_colums] = A->matrix[i][j];
+      }
     }
-    // if (i != rows && j != colums) {
-    //   result->matrix [rows - n_rows]
   }
 }
-//}
 
-// int s21_determinant(matrix_t *A, double *result) {
-//   int res = OK;
-//   if (examination_matrix(A) == OK &&
-//       examination_matrix(B) == OK) {  // проверка матрици
-//     if (A->rows == A->columns) {
-//       for (int i = 0; A->rows > 2 && A->columns > 2; i++) {
-//       }
-//       // if (A->rows = 2 &&A->columns = 2) {
-//       //   s21_det_square(&A);
-//       // }
-//     } else {
-//       res = INCORRECT_MATRIX;
-//     }
-//   }
-//   return res;
-// }
+int s21_determinant(matrix_t *A, double *result) {
+  int res = OK;
+  if (examination_matrix(A) == OK) {  // проверка матрици
+    if (A->rows == A->columns) {
+      if (res == OK) {
+        *result = s21_less_det(A, result);
+      }
+      // for (int i = 0; A->rows > 2 && A->columns > 2; i++) {
+      // }
+      // if (A->rows = 2 &&A->columns = 2) {
+      //   s21_det_square(&A);
+      // }
+    } else {
+      res = INCORRECT_MATRIX;
+    }
+  }
+  return res;
+}
 
-// int s21_less_det() {  // функция для действия уменьшеня матрици до размеров
-// 2 на
-//                       // 2
-// }
+int s21_less_det(matrix_t *A, double *result) {
+  double res = OK;
+  if (A->rows == 1) {
+    *result = A->matrix[0][0];
+  } else if (A->rows == 2) {
+    *result = s21_do_det(A->matrix);
+  } else {
+    double det_m = 0;
+    matrix_t nov_mat = {0};
+    int err = s21_create_matrix(A->rows, A->rows, &nov_mat);
+    if (!err) {
+      for (int j = 0; j < A->columns; j++) {
+        minor_matrix(0, j, A, &nov_mat, A->rows);
+        s21_determinant(&nov_mat, &det_m);
+        *result += A->matrix[0][j] * pow(-1, j + 2) * det_m;
+        s21_remove_matrix(&nov_mat);
+      }
+    }
+  }
+  return res;
+}
+
+double s21_do_det(double **matrix) {
+  return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+}
 
 // int s21_det_square(matrix_t *A) {
 //   int res = OK;
