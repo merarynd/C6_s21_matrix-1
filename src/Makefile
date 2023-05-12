@@ -17,7 +17,7 @@ all: clean test gcov_report
 
 test: s21_matrix.a
 	$(CC+FLAGS) s21_tests.c s21_matrix.a $(CHECK_FLAGS) -L. -ls21_matrix -o s21_test
-	./s21_test
+	@./s21_test > 2.txt
 
 gcov_report: s21_matrix.a
 	$(CC+FLAGS) *.c s21_matrix.a $(CHECK_FLAGS) $(GCOV_FLAGS) -o s21_test

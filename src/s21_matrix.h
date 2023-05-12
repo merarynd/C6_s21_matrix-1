@@ -8,10 +8,13 @@
 // #include <stdbool.h>
 // #include <stdint.h>
 #include <stdlib.h>
-// #include <string.h>
+#include <string.h>
 
 #define SUCCESS 1
 #define FAILURE 0
+
+#define EXAM_A (examination_matrix(A) == OK)
+#define EXAM_B (examination_matrix(B) == OK)
 
 enum {
   OK = 0,                // 0
@@ -49,8 +52,9 @@ int s21_determinant(matrix_t *A, double *result);
 int examination_matrix(matrix_t *A);
 void minor_matrix(int rows, int columns, matrix_t *A, matrix_t *result, int n);
 double s21_do_det(double **matrix);
-int s21_less_det(matrix_t *A, double *result);
-// int minor_matrix(matrix_t *A, matrix_t *result, int i, int j);
+int s21_less_det(matrix_t *A, int n);
+// int s21_less_det(matrix_t *A, double *result);
+//  int minor_matrix(matrix_t *A, matrix_t *result, int i, int j);
 void minor_matrix(int rows, int columns, matrix_t *A, matrix_t *result, int n);
 
 // тесты

@@ -1,30 +1,5 @@
 #include "s21_matrix.h"
 
-// int s21_create_matrix(int rows, int columns, matrix_t *result) {
-//   int error = 0;
-//   if (rows > 0 && columns > 0) {  // проверка поданных данных
-//     result->rows = rows;
-//     result->columns = columns;
-//     result->matrix = (double **)calloc(rows, sizeof(double *));
-//     error = 0;
-//   } else {
-//     error = 1;
-//   }
-//   if (result->matrix != NULL) {  // проверка поданных данных
-//     for (int i = 0; i != rows; i++) {
-//       result->matrix[i] = (double *)calloc(columns, sizeof(double));
-//       if (!result->matrix) {
-//         for (int j = 0; j != columns; i++) {
-//           free(result->matrix[j]);  // очистка памяти каждого элемента
-//         }
-//         free(result->matrix);  // очистка матрици
-//       }
-//     }
-//     error = 0;
-//   }
-//   return error;
-// }
-
 int s21_create_matrix(int rows, int columns,
                       matrix_t *result) {  // создание матриц
   int error =
@@ -57,21 +32,6 @@ void s21_remove_matrix(matrix_t *A) {  // очистка матрици
   A->rows = 0;       // сегментов
 }
 
-// int s21_create_matrix(int rows, int columns, matrix_t *result) {
-//   errors outcome = OK;
-//   if (rows > 0 && columns > 0 && result != NULL) {
-//     result->rows = rows;
-//     result->columns = columns;
-//     result->matrix = (double **)malloc(sizeof(double *) * rows);
-//     for (int i = 0; i < rows; i++) {
-//       (result->matrix)[i] = (double *)malloc(sizeof(double) * columns);
-//     }
-//   } else {
-//     outcome = INCORRECT;
-//   }
-//   return outcome;
-// }
-
 int examination_matrix(matrix_t *A) {  // проверка матрици
   int exam = OK;
   if (A->matrix == NULL || A->matrix == NULL || A->rows <= 0 || A->columns <= 0)
@@ -81,7 +41,7 @@ int examination_matrix(matrix_t *A) {  // проверка матрици
 
 int s21_mult_number(matrix_t *A, double number, matrix_t *result) {
   int res = OK;
-  if (examination_matrix(A) == OK) {  // проверка матрици
+  if (EXAM_A) {  // проверка матрици
     res = s21_create_matrix(A->rows, A->columns, result);  // создание матрици
     if (res == OK) {  // проверяем выход при создании матрици
       for (int i = 0; i < A->rows; i++) {       // проходимся по
@@ -99,8 +59,7 @@ int s21_mult_number(matrix_t *A, double number, matrix_t *result) {
 
 int s21_sum_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
   int res = OK;
-  if (examination_matrix(A) == OK &&
-      examination_matrix(B) == OK) {  // проверка матрици
+  if (EXAM_A && EXAM_B) {  // проверка матрици
     if (A->rows == B->rows &&
         A->columns == B->columns) {  // проверяем параметры матриц
       res = s21_create_matrix(A->rows, A->columns, result);
@@ -111,10 +70,10 @@ int s21_sum_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
           }
         }
       } else {
-        res = INCORRECT_MATRIX;
+        res = INCORRECT_MATRIX;  // некорректная матрица
       }
     } else {
-      res = INCORRECT_MATRIX;
+      res = INCORRECT_MATRIX;  // некорректная матрица
     }
   }
   return res;
@@ -122,8 +81,7 @@ int s21_sum_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
 
 int s21_sub_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
   int res = OK;
-  if (examination_matrix(A) == OK &&
-      examination_matrix(B) == OK) {  // проверка матрици
+  if (EXAM_A && EXAM_B) {  // проверка матрици
     if (A->rows == B->rows &&
         A->columns == B->columns) {  // проверяем параметры матриц
       res = s21_create_matrix(A->rows, A->columns, result);
@@ -134,41 +92,63 @@ int s21_sub_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
           }
         }
       } else {
-        res = INCORRECT_MATRIX;
+        res = INCORRECT_MATRIX;  // некорректная матрица
       }
     } else {
-      res = INCORRECT_MATRIX;
+      res = INCORRECT_MATRIX;  // некорректная матрица
     }
   }
   return res;
 }
 
 int s21_mult_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
-  int res = OK;
-  if (examination_matrix(A) == OK &&
-      examination_matrix(B) == OK) {  // проверка матрици
-    if (A->columns == B->rows) {  // проверяем параметры матриц
-      res = s21_create_matrix(A->rows, A->columns, result);
-      if (res == OK) {
-        for (int i = 0; i < A->rows; i++) {       // проходимся по
-          for (int j = 0; j < A->columns; j++) {  // всей матрице
-            result->matrix[i][j] = A->matrix[i][j] * B->matrix[i][j];
+  int res = 0;
+  if (EXAM_A && EXAM_B) {  // проверка матрици
+    if ((A->columns == B->rows)) {
+      res = s21_create_matrix(A->rows, B->columns, result);
+      for (int i = 0; i < A->rows; i++) {
+        for (int j = 0; j < B->columns; j++) {
+          for (int k = 0; k < B->rows; k++) {
+            result->matrix[i][j] +=
+                A->matrix[i][k] * B->matrix[k][j];  // перемножение матриц
           }
         }
-      } else {
-        res = INCORRECT_MATRIX;
       }
     } else {
-      res = INCORRECT_MATRIX;
+      res = CALC_ERROR;  // Ошибка вычисления(нельзя провести вычесления)
     }
+  } else {
+    res = INCORRECT_MATRIX;  // некорректная матрица
   }
   return res;
 }
 
+// int s21_mult_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
+//   int res = OK;
+//   if ((examination_matrix(A) == OK && examination_matrix(B) == OK) &&
+//       (A->columns == B->columns && A->rows == B->rows)) {  // проверка
+//       sматрици
+//     if (A->columns == B->rows) {  // проверяем параметры матриц
+//       res = s21_create_matrix(A->rows, A->columns, result);
+//       if (res == OK) {
+//         for (int i = 0; i < A->rows; i++) {       // проходимся по
+//           for (int j = 0; j < A->columns; j++) {  // всей матрице
+//             result->matrix[i][j] += A->matrix[i][j] * B->matrix[i][j];
+//           }
+//         }
+//       } else {
+//         res = INCORRECT_MATRIX;
+//       }
+//     } else {
+//       res = CALC_ERROR;
+//     }
+//   }
+//   return res;
+// }
+
 int s21_eq_matrix(matrix_t *A, matrix_t *B) {
   int res = SUCCESS;
-  if (examination_matrix(A) == OK &&
-      examination_matrix(B) == OK) {  // проверка матриц
+  if (EXAM_A && EXAM_B) {  // проверка матриц
     if (A->rows == B->rows &&
         A->columns == B->columns) {  // проверяем параметры матриц
       for (int i = 0; i < A->rows; i++) {       // проходимся по
@@ -188,6 +168,26 @@ int s21_eq_matrix(matrix_t *A, matrix_t *B) {
   return res;
 }
 
+// int s21_eq_matrix(matrix_t *A, matrix_t *B) {
+//   int res = SUCCESS;
+//   if (examination_matrix(A) == FAILURE ||
+//       examination_matrix(B) == FAILURE) {  // проверка матриц
+//     res = FAILURE;
+//   } else {
+//     if (A->rows == B->rows && A->columns == B->columns) {
+//       for (int i = 0; i < A->rows; i++) {       // проходимся по
+//         for (int j = 0; j < A->columns; j++) {  // всей матрице
+//           if (fabs(A->matrix[i][j] - B->matrix[i][j]) < 1e-7) {
+//             res = SUCCESS;
+//             break;
+//           }
+//         }
+//       }
+//     }
+//   }
+//   return res;
+// }
+
 int s21_transpose(matrix_t *A, matrix_t *result) {
   int res = OK;
   if (examination_matrix(A) == OK) {  // проверка матрици
@@ -205,7 +205,7 @@ int s21_transpose(matrix_t *A, matrix_t *result) {
 
 int s21_calc_complements(matrix_t *A, matrix_t *result) {
   int res = OK;
-  if (examination_matrix(A) == OK) {  // проверка матрици
+  if (EXAM_A) {  // проверка матрици
     res = s21_create_matrix(A->columns, A->rows, result);
     if (A->rows == A->columns) {
       if (res == OK) {
@@ -222,27 +222,29 @@ int s21_calc_complements(matrix_t *A, matrix_t *result) {
           }
         }
       } else {
-        res = INCORRECT_MATRIX;
+        res = INCORRECT_MATRIX;  // некорректная матрица
       }
     } else {
-      res = CALC_ERROR;
+      res = CALC_ERROR;  // Ошибка вычисления(нельзя провести вычесления)
     }
+  } else {
+    res = INCORRECT_MATRIX;  // некорректная матрица
   }
-  // s21_remove_matrix(&A);
+  // s21_remove_matrix(&A);// чистка
   return res;
 }
 
 void minor_matrix(int rows, int columns, matrix_t *A, matrix_t *result, int n) {
-  // double res = 0;
-  int n_rows = 0, n_colums = 0;
+  int n_columns = 0, n_rows = 0;
   result->rows = n - 1;  // убираем у каждого параметра
   result->columns = n - 1;  // по одному ряду/столбцу
-  for (int i = 0; i > n; i++) {
+  for (int i = 0; i < n; i++) {
     if (i == rows) n_rows = 1;
-    for (int j = 0; j > n; i++) {
-      if (j == columns) n_colums = 1;
+    n_columns = 0;
+    for (int j = 0; j < n; j++) {
+      if (j == columns) n_columns = 1;
       if (i != rows && j != columns) {
-        result->matrix[rows - n_rows][columns - n_colums] = A->matrix[i][j];
+        result->matrix[i - n_rows][j - n_columns] = A->matrix[i][j];
       }
     }
   }
@@ -250,47 +252,50 @@ void minor_matrix(int rows, int columns, matrix_t *A, matrix_t *result, int n) {
 
 int s21_determinant(matrix_t *A, double *result) {
   int res = OK;
-  if (examination_matrix(A) == OK) {  // проверка матрици
+  *result = 0;
+  if (EXAM_A) {  // проверка матрици
     if (A->rows == A->columns) {
       if (res == OK) {
-        *result = s21_less_det(A, result);
+        *result = s21_less_det(A, A->rows);
       }
-      // for (int i = 0; A->rows > 2 && A->columns > 2; i++) {
-      // }
-      // if (A->rows = 2 &&A->columns = 2) {
-      //   s21_det_square(&A);
-      // }
     } else {
-      res = INCORRECT_MATRIX;
+      res = CALC_ERROR;  // Ошибка вычисления(нельзя провести вычесления)
     }
+  } else {
+    res = INCORRECT_MATRIX;  // некорректная матрица
   }
   return res;
 }
 
-int s21_less_det(matrix_t *A, double *result) {
+int s21_less_det(matrix_t *A, int n) {
   double res = OK;
-  if (A->rows == 1) {
-    *result = A->matrix[0][0];
-  } else if (A->rows == 2) {
-    *result = s21_do_det(A->matrix);
-  } else {
+  if (n == 1) {  // если матрица из одного числа
+    res = A->matrix[0][0];
+  } else if (n == 2) {  // если матрица из 4 чисел
+    res = s21_do_det(A->matrix);
+  } else {  // слобци/строки размером > 2 && !=0
     double det_m = 0;
     matrix_t nov_mat = {0};
-    int err = s21_create_matrix(A->rows, A->rows, &nov_mat);
+    int err =
+        s21_create_matrix(A->rows, A->rows, &nov_mat);  // создание матрици
     if (!err) {
       for (int j = 0; j < A->columns; j++) {
-        minor_matrix(0, j, A, &nov_mat, A->rows);
-        s21_determinant(&nov_mat, &det_m);
-        *result += A->matrix[0][j] * pow(-1, j + 2) * det_m;
-        s21_remove_matrix(&nov_mat);
+        minor_matrix(0, j, A, &nov_mat,
+                     A->rows);  // поиск минора для уменешения матрици на 1
+                                // столб и строку
+        s21_determinant(&nov_mat,
+                        &det_m);  // поиск детерминанта полученой матрици
+        res += A->matrix[0][j] * pow(-1, j + 2) * det_m;
+        // s21_remove_matrix(&nov_mat);
       }
     }
+    s21_remove_matrix(&nov_mat);  // чистка
   }
   return res;
 }
 
 double s21_do_det(double **matrix) {
-  return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+  return matrix[0][0] * matrix[1][1] - matrix[1][0] * matrix[0][1];
 }
 
 // int s21_det_square(matrix_t *A) {
