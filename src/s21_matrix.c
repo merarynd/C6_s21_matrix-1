@@ -298,43 +298,50 @@ double s21_do_det(double **matrix) {
   return matrix[0][0] * matrix[1][1] - matrix[1][0] * matrix[0][1];
 }
 
-// int s21_inverse_matrix(matrix_t *A, matrix_t *result) {
-//   int res = OK;
-//   double n_det = 0;
-//   if (EXAM_A) {  // проверка матрици
-//                  // res = s21_create_matrix(A->columns, A->rows, result);
-//     // res = s21_determinant(A, &n_det);
-//     if (A->rows == A->columns) {
-//       if (res == OK) {
-//         res = s21_in_mat(A, n_det, result);
-//         // res = s21_determinant(A, result);
-//       }
-//     } else {
-//       res = CALC_ERROR;  // Ошибка вычисления(нельзя провести вычесления)
-//     }
-//   } else {
-//     res = INCORRECT_MATRIX;  // некорректная матрица
-//   }
-//   return res;
-// }
+int s21_inverse_matrix(matrix_t *A, matrix_t *result) {
+  int res = OK;
+  double n_det = 0;
+  if (EXAM_A) {  // проверка матрици
+                 // res = s21_create_matrix(A->columns, A->rows, result);
+    // res = s21_determinant(A, &n_det);
+    if (A->rows == A->columns) {
+      if (res == OK) {
+        res = s21_in_mat(A, n_det, result);
+        // res = s21_determinant(A, result);
+      }
+    } else {
+      res = CALC_ERROR;  // Ошибка вычисления(нельзя провести вычесления)
+    }
+  } else {
+    res = INCORRECT_MATRIX;  // некорректная матрица
+  }
+  return res;
+}
 
-// int s21_in_mat(matrix_t *A, double n_det, matrix_t *result) {
-//   int res = OK;
-//   // double n_det = 0;
-//   if (fabs(n_det) > 1e-6) {
-//     matrix_t n_mat = {0};
-//     res = s21_determinant(A, &n_det);
-//     if (res == OK) {
-//       s21_calc_complements(A, &n_mat);
-//       s21_transpose(A, &n_mat);
-//       for (int i = 0; i < A->rows; i++) {       // проходимся по
-//         for (int j = 0; j < A->columns; j++) {  // всей матрице
-//           result->matrix[i][j] /= n_det;
-//         }
-//       }
-//       s21_remove_matrix(&n_mat);  // чистка
-//       // s21_remove_matrix(A);  // чистка
-//     }
-//   }
-//   return res;
-// }
+int s21_in_mat(matrix_t *A, double n_det, matrix_t *result) {
+  int res = OK;
+  // double n_det = 0;
+  if (fabs(n_det) > 1e-6) {
+    matrix_t n_mat = {0};
+    res = s21_determinant(A, &n_det);
+    if (n_det != 0) {
+      if (res == OK) {
+        s21_calc_complements(A, &n_mat);
+        s21_transpose(&n_mat, result);
+        // for (int i = 0; i < A->rows; i++) {       // проходимся по
+        //   for (int j = 0; j < A->columns; j++) {  // всей матрице
+        //     result->matrix[i][j] /= n_det;
+        //   }
+        // }
+        s21_mult_number(&n_mat, n_det, result);
+        s21_remove_matrix(&n_mat);  // чистка
+        // s21_remove_matrix(A);  // чистка
+      }
+    } else {
+      res = INCORRECT_MATRIX;  // некорректная матрица
+    }
+  } else {
+    res = CALC_ERROR;  // некорректная матрица
+  }
+  return res;
+}
