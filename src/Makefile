@@ -6,18 +6,19 @@ OS = $(shell uname)
 ifeq ($(OS), Linux)
 	CHECK_FLAGS = -lcheck -lm -pthread -lrt -lsubunit
 	OPEN_CMD = xdg-open
-	MEM_CHECK = valgrind --tool=memcheck --trace-children=yes --track-origins=yes --leak-check=full
+	MEM_CHECK = valgrind --tool=memcheck --trace-children=yes --track-origins=yes --leak-check=full ./s21_test
 else
 	CHECK_FLAGS = -lcheck
 	OPEN_CMD = open
 	MEM_CHECK = leaks --atExit -- ./s21_test
 endif
 
-all: clean test gcov_report
+all: clean test
 
 test: s21_matrix.a
 	$(CC+FLAGS) s21_tests.c s21_matrix.a $(CHECK_FLAGS) -L. -ls21_matrix -o s21_test
-	@./s21_test > 2.txt
+	./s21_test
+# @ > 2.txt
 
 gcov_report: s21_matrix.a
 	$(CC+FLAGS) *.c s21_matrix.a $(CHECK_FLAGS) $(GCOV_FLAGS) -o s21_test
@@ -37,10 +38,10 @@ s21_matrix.a: s21_matrix.o
 s21_matrix.o:
 	$(CC+FLAGS) -c s21_matrix.c
 
-check:
-	make test
-	CK_FORK=no $(MEM_CHECK) ./s21_test
-	make clean
+valgrind: clean test
+	@echo "$(BLUE)----------------VALGRIND-----------------$(END)"
+	@CK_FORK=no valgrind --trace-children=yes --track-fds=yes --track-origins=yes --leak-check=full --show-leak-kinds=all --verbose --log-file=valgrind.txt ./s21_tests
+	@echo "$(BLUE)-----------------------------------------$(END)"
 
 clang:
 	cp ../materials/linters/.clang-format ../src/.clang-format

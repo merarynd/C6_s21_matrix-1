@@ -52,9 +52,10 @@ int s21_inverse_matrix(matrix_t *A, matrix_t *result);
 int examination_matrix(matrix_t *A);
 void minor_matrix(int rows, int columns, matrix_t *A, matrix_t *result, int n);
 double s21_do_det(double **matrix);
-int s21_less_det(matrix_t *A, int n);
+int s21_less_det(matrix_t *A);
 void minor_matrix(int rows, int columns, matrix_t *A, matrix_t *result, int n);
-int s21_in_mat(matrix_t *A, double n_det, matrix_t *result);
+int s21_in_mat(matrix_t *A, double det, matrix_t *result);
+void s21_c_c(matrix_t *A, matrix_t *result);
 
 // тесты
 void s21_fill(matrix_t *matrixStruct, double value);

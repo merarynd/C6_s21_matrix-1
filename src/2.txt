@@ -1,6 +1,0 @@
-Running suite(s): Core
-92%: Checks: 54, Failures: 2, Errors: 2
-s21_tests.c:214:F:Core:inverse_hardcoded:0: Assertion 's21_eq_matrix(&expected, &res) == 1' failed: s21_eq_matrix(&expected, &res) == 0, 1 == 1
-s21_tests.c:656:F:Core:test_s21_inverse_matrix:0: Assertion 'result_defolt.matrix[i][j] == result_defolt_2.matrix[i][j]' failed: result_defolt.matrix[i][j] == 1, result_defolt_2.matrix[i][j] == 0
-s21_tests.c:686:E:Core:test_s21_inverse_matrix_4:0: (after this point) Received signal 11 (Segmentation fault: 11)
-s21_tests.c:1068:E:Core:s21_inverse_matrix_test_1:0: (after this point) Received signal 11 (Segmentation fault: 11)
